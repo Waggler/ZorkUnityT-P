@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zork;
 using TMPro;
+using Zork.Common;
 
 public class UnityOutputService : MonoBehaviour, IOutputService
 {
 
     [SerializeField] private TextMeshProUGUI OutputText;
+    [SerializeField] private TMP_InputField InputField;
 
     void Write(object value);
 
@@ -43,4 +45,13 @@ public class UnityOutputService : MonoBehaviour, IOutputService
 
     }//END Update
 
+    void IOutputService.Write(object value)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IOutputService.WriteLine(object value)
+    {
+        throw new NotImplementedException();
+    }
 }

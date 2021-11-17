@@ -1,10 +1,12 @@
 using UnityEngine;
+using Zork.Common;
 
 public class GameManager : MonoBehaviour
 {
 
     [SerializeField] private string ZorkGameFileAssetName = "Zork";
-    [SerializeField] private UnityOutPutService Output;
+    [SerializeField] private UnityInputService Input;
+    [SerializeField] private UnityOutputService Output;
 
 
     //-----------------------//
@@ -28,10 +30,22 @@ public class GameManager : MonoBehaviour
     void Update()
     //-----------------------//
     {
+        //Moving to inputfield enter/onEndEdit
+        /*
         if (Input.GetKey(KeyCode.Return))
         {
             InputService.ProcessInput();    
         }
+        */
+
+
+    }//END Update
+
+    //-----------------------//
+    public void GetEnter()
+    //-----------------------//
+    {
+        IInputService.ProcessInput();
 
 
     }//END Update
