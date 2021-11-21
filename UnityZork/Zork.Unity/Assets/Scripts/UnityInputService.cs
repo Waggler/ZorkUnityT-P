@@ -13,8 +13,27 @@ public class UnityInputService : MonoBehaviour, IInputService
 
     public event EventHandler<string> InputReceived;
 
-    public void ProcessInput()
+    /*
+    public void GetInput()
     {
-
+        string inputString = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(inputString) == false)
+        {
+            InputReceived?.Invoke(this, inputString);
+        }
+        
     }
+    */
+
+    public void GetInput()
+    {
+        string inputString = InputField.text;
+        if (string.IsNullOrWhiteSpace(inputString) == false)
+        {
+            InputReceived?.Invoke(this, inputString);
+        }
+
+        InputField.text = string.Empty;
+    }
+
 }

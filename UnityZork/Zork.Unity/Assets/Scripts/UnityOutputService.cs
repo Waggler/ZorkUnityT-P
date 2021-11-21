@@ -12,9 +12,22 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     [SerializeField] private TextMeshProUGUI OutputText;
     [SerializeField] private TMP_InputField InputField;
 
-    public void Write(object value);
+    public void Clear()
+    {
 
-    public void WriteLine(object value);
+    }
+
+    public void Write(string value)
+    {
+
+    }
+
+    public void Write(object value) => Write(value.ToString());
+
+    public void WriteLine(object value)
+    {
+        OutputText.text = value;
+    }
 
     void WriteLine(string value)
     {

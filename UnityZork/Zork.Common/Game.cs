@@ -85,26 +85,36 @@ namespace Zork.Common //Zork
 
         */
 
-        public void Start(IInputService input, IOutputService output)
+        public void Start(string gameJsonString, IInputService input, IOutputService output) // should we have added Instance. like he does at 5:56?
         {
             Assert.IsNotNull(input);
+            Instance = LoaderOptimization(gameJsonString);
             Input = input;
             Input.InputReceived += InputReceivedHandler;
 
             Assert.IsNotNull(output);
             Output = output;
 
-            IsRunning = true;
+            IsRunning = true;// Comment out? or replace with Instance.IsRunning = true;
+            /*
+            Instance = Load(gameJsonString);
+            Instance.Input = input;
+            Instance.Output = output;
+            Instance.LoadCommands();
+            Instance.DisplayWelcomeMessage();
+            Instance.IsRunning = true;
+            */
+            Instance.Input.InputReceived += Instance.InputReceivedHandler;
 
         }
 
-        private void InputReceivedHandler(object sender, string commandString)
+        private void InputReceivedHandler(object sender, string inputString)
         {
 
             Command foundCommand = null;
             foreach (Command command in Commands.Values)
             {
-                if (command.Verbs.Contains(commandString))
+                if (command.Verbs.Contains(inputString))
                 {
                     foundCommand = command;
                     break;

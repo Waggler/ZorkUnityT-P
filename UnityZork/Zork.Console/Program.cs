@@ -20,6 +20,17 @@ namespace Zork
             //See commented method
             //game.Player.LocationChanged += Player_LocationChanged;
 
+            Game.StartFromFile(gameFilename, input, output);
+            //Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
+            
+            while (Game.Instance.IsRunning)
+            {
+                output.WriteLine(game Player.Location); //Remove?
+                output.Write("/n> ");
+                input.GetInput();
+            }
+
+            /*
             output.WriteLine(string.IsNullOrWhiteSpace(game.WelcomeMessage) ? "Welcome to Zork!" : game.WelcomeMessage);
             game.Start(input, output);
 
@@ -36,7 +47,7 @@ namespace Zork
                 output.Write("\n> ");
                 input.ProcessInput();
             }
-
+            */
             output.WriteLine(string.IsNullOrWhiteSpace(game.ExitMessage) ? "Thank you for playing!" : game.ExitMessage);
 
         }
