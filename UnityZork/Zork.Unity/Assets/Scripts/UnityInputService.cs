@@ -11,8 +11,7 @@ public class UnityInputService : MonoBehaviour, IInputService
 
     [SerializeField]private TMP_InputField InputField;
 
-    event EventHandler<string> InputReceived;
-
+    public event EventHandler<string> InputReceived;
 
     public void ProcessInput()
     {
