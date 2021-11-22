@@ -17,19 +17,36 @@ namespace Zork
             ConsoleInputService input = new ConsoleInputService();
             ConsoleOutputService output = new ConsoleOutputService();
 
+            //output.WriteLine(string.IsNullOrWhiteSpace(game.WelcomeMessage) ? "Welcome to Zork!" : game); //from in class today
+
             //See commented method
             //game.Player.LocationChanged += Player_LocationChanged;
 
-            //Game.StartFromFile(gameFilename, input, output);
+            Game.StartFromFile(gameFilename, input, output);
+
             Game.Start(gameFilename, input, output);
 
-            //Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
-            
+            Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
+            /*
             while (Game.Instance.IsRunning)
             {
                 output.WriteLine(game Player.Location); //Remove?
                 output.Write("/n> ");
                 input.GetInput();
+            }
+            */
+
+            while (game.IsRunning)
+            {
+                output.WriteLine(game Player.Location);
+                if (previousRoom != game.Player.Location)
+                {
+                    game.Look(game);
+                    previousRoom = game.Player.Location;
+                }
+
+                output.Write("\n ");
+
             }
 
             /*

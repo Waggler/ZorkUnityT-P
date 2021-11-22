@@ -39,7 +39,7 @@ public class UnityInputService : MonoBehaviour, IInputService
     }
     public void GetInput()
     {
-        string inputString = InputField.text;
+        string inputString = InputField.text.Trim().ToUpper();
         if (string.IsNullOrWhiteSpace(inputString) == false)
         {
             InputReceived?.Invoke(this, inputString);
