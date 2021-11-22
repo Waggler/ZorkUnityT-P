@@ -11,20 +11,16 @@ public class UnityOutputService : MonoBehaviour, IOutputService
 
     [SerializeField] private TextMeshProUGUI OutputText;
     [SerializeField] private TMP_InputField InputField;
-    [SerializeField] private int MaxEntries = 60;
-    [SerializeField] private TextMeshProUGUI NewLinePrefab;
-    [SerializeField] 
-
-
-    private readonly List<GameObject> mEntries;
 
     public void Clear()
     {
-        mEntries.ForEach(entry => Destroy(entry));
-        mEntries.Clear();
+
     }
 
-    public void Write(string value) => ParseAndWriteLine(value);
+    public void Write(string value)
+    {
+
+    }
 
     public void Write(object value) => Write(value.ToString());
 
@@ -61,26 +57,6 @@ public class UnityOutputService : MonoBehaviour, IOutputService
 
 
     }//END Update
-
-    private void WriteNewLine(string value)
-    {
-        var textLine = Instantiate(NewLinePrefab, );
-        newLine.transform.SetParent(OutputTextContainer, false);
-        mEntries.
-    }
-
-    private void WriteTextLine(string value)
-    {
-        var textLine = Instantiate(NewLinePrefab);
-        newLine.transform.SetParent(OutputTextContainer, false);
-        mEntries.
-    }
-
-    private void ParseAndWriteLine(string value)
-    {
-        string[] delimiters;
-
-    }
 
     void IOutputService.Write(object value)
     {

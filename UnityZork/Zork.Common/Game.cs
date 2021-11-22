@@ -14,10 +14,6 @@ namespace Zork.Common //Zork
 {
     public class Game : INotifyPropertyChanged
     {
-        public event EventHandler GameStarted;
-        public event EventHandler GameStopped;
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public World World { get; private set; }
@@ -34,11 +30,11 @@ namespace Zork.Common //Zork
 
         [JsonIgnore]
         public bool IsRunning { get; }
-
-        [JsonIgnore]
+        //These ignores were not added in class
+        //[JsonIgnore]
         public IInputService Input { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public IOutputService Output { get; set; }
 
         [JsonIgnore]
@@ -56,7 +52,7 @@ namespace Zork.Common //Zork
             World = world;
             Player = player;
 
-            Commands = new Dictionary<string, Command>()
+            /*Commands = new Dictionary<string, Command>()
             {
                 { "QUIT", new Command("QUIT", new string[] { "QUIT", "Q", "BYE" }, Quit) },
                 { "LOOK", new Command("LOOK", new string[] { "LOOK", "L" }, Look) },
@@ -64,7 +60,7 @@ namespace Zork.Common //Zork
                 { "SOUTH", new Command("SOUTH", new string[] { "SOUTH", "S" }, game => Move(game, Directions.South)) },
                 { "EAST", new Command("EAST", new string[] { "EAST", "E"}, game => Move(game, Directions.East)) },
                 { "WEST", new Command("WEST", new string[] { "WEST", "W" }, game => Move(game, Directions.West)) },
-            };
+            };*/
         }
 
         public Game() => CommandManager = new CommandManager();
@@ -93,6 +89,8 @@ namespace Zork.Common //Zork
             }
         }
 
+        //from the zork in unity vid, I think this is handled in Program actually
+        /*
         public static void StartFromFile(string gameFileName, IInputService input, IOutputService output)
         {
             if (!File.Exists(gameFileName))
@@ -103,28 +101,28 @@ namespace Zork.Common //Zork
             Start(File.ReadAllText(gameFileName, input, output);
 
         }
-
-
+        
+        
         public static Game Load(string jsonString)
         {
             Game game = JsonConvert.DeserializeObject<Game>(jsonString);
             game.Player = game.World.SpawnPlayer();
 
-            return game;
+        return game;
         }
 
-        
-        private static void Input_InputReceivedHandler(object sender, string inputString)
+        private static void Input_InputReceivedHandler(object sender, string e)
         {
-            Room previousRoom = Player.Location;
-            if (ComandManager.PerformCommand(this.inputString.Trim()){
-                Player.Moves++;
-
-                if previousRoom != Player.Location{
-                    Common.PerformCommand(this, "LOOK");
-                }
+            Room previousRoom = null;'
+            Output.WriteLine(Player.Location);
+            if (previousRoom != Player.Location)
+            {
+                CommandManager.PerformCommand(this, "Look");
+                previousRoom = Player.Location;
             }
         }
+
+        */
 
         public static Game Load(string jsonString)
         {
@@ -136,7 +134,6 @@ namespace Zork.Common //Zork
 
         public static void Start(string gameJsonString, IInputService input, IOutputService output) // should we have added Instance. like he does at 5:56?
         {
-
             if (!File.Exists(gameJsonString))
             {
                 throw new FileNotFoundException("Excepted File.", gameJsonString);
@@ -164,14 +161,14 @@ namespace Zork.Common //Zork
             */
 
 
-
+            /*
             Instance = Load(gameJsonString);
             Instance.Input = input;
             Instance.Output = output;
             Instance.LoadCommands();
             Instance.DisplayWelcomeMessage();
             Instance.IsRunning = true;
-
+            */
             Instance.Input.InputReceived += Instance.InputReceivedHandler;
 
         }
@@ -209,9 +206,9 @@ namespace Zork.Common //Zork
 
         private void Run()
         {
-            IsRunning = true;
+            mIsRunning = true;
             Room previousRoom = null;
-            while (IsRunning)
+            while (mIsRunning)
             {
                 Console.WriteLine(Player.Location);
                 if (previousRoom != Player.Location)
@@ -234,7 +231,7 @@ namespace Zork.Common //Zork
 
         public void Restart()
         {
-            IsRunning = false;
+            mIsRunning = false;
             mIsRestarting = true;
             Console.Clear();
         }
@@ -242,14 +239,7 @@ namespace Zork.Common //Zork
         public static void Look(Game game) => game.Output.WriteLine(game.Player.Location.Description);
 
         //private static void Quit(Game game) => game.IsRunning = false;
-        private static void Quit() => IsRunning = false;
-
-        //from class
-        private static void Quit(Game game)
-        {
-            game.IsRunning = false;
-            game.GameStopped?.Invoke(game, EventArgs.Empty);
-        }
+        public void Quit() => mIsRunning = false;
 
         private void LoadScripts()
         {
@@ -304,7 +294,7 @@ namespace Zork.Common //Zork
         private static readonly string ScriptFileExtension = "*.csx";
 
 
-        private bool IsRunning;
+        private bool mIsRunning;
         private bool mIsRestarting;
 
         [OnDeserialized]
