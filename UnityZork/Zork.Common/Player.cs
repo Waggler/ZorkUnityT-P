@@ -10,6 +10,8 @@ namespace Zork
 
         public World World { get; }
 
+        public int Moves;
+
         [JsonIgnore]
         public Room Location
         {
