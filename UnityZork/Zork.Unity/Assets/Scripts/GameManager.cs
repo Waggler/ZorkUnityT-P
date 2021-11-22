@@ -1,6 +1,5 @@
 using UnityEngine;
 using Zork.Common;
-using Zork;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,7 +16,7 @@ public class GameManager : MonoBehaviour
         TextAsset gameJsonAsset = Resources.Load<TextAsset>(ZorkGameFileAssetName);
 
         Game.Start(gameJsonAsset.text, Input, Output);
-        Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
+        //Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
 
     }//END Awake
 

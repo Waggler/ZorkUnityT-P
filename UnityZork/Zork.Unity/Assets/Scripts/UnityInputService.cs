@@ -24,19 +24,7 @@ public class UnityInputService : MonoBehaviour, IInputService
         
     }
     */
-    void Update()
-    {
-        if (Input.GetKey(KeyCode.Return))
-        {
-            string inputString = InputField.text;
-            if (string.IsNullOrWhiteSpace(inputString) == false)
-            {
-                InputReceived?.Invoke(this, inputString);
-            }
 
-            InputField.text = string.Empty;
-        }
-    }
     public void GetInput()
     {
         string inputString = InputField.text;

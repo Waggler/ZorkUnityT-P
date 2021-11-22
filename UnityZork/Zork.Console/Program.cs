@@ -20,9 +20,7 @@ namespace Zork
             //See commented method
             //game.Player.LocationChanged += Player_LocationChanged;
 
-            //Game.StartFromFile(gameFilename, input, output);
-            Game.Start(gameFilename, input, output);
-
+            Game.StartFromFile(gameFilename, input, output);
             //Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
             
             while (Game.Instance.IsRunning)
