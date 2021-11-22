@@ -6,8 +6,8 @@ public class GameManager : MonoBehaviour
 {
 
     [SerializeField] private string ZorkGameFileAssetName = "Zork";
-    [SerializeField] private UnityInputService Input;
-    [SerializeField] private UnityOutputService Output;
+    [SerializeField] private UnityInputService InputService;
+    [SerializeField] private UnityOutputService OutputService;
 
 
     //-----------------------//
@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     {
         TextAsset gameJsonAsset = Resources.Load<TextAsset>(ZorkGameFileAssetName);
 
-        Game.Start(gameJsonAsset.text, Input, Output);
+        Game.Start(gameJsonAsset.text, InputService, OutputService);
         Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
 
     }//END Awake
@@ -33,12 +33,12 @@ public class GameManager : MonoBehaviour
     //-----------------------//
     {
         //Moving to inputfield enter/onEndEdit
-        /*
+        
         if (Input.GetKey(KeyCode.Return))
         {
             InputService.ProcessInput();    
         }
-        */
+        
 
 
     }//END Update
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     public void GetEnter()
     //-----------------------//
     {
-        IInputService.ProcessInput();
+        //IInputService.ProcessInput();
 
 
     }//END Update

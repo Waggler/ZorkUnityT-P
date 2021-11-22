@@ -13,6 +13,11 @@ public class UnityInputService : MonoBehaviour, IInputService
 
     public event EventHandler<string> InputReceived;
 
+    public void ProcessInput()
+    {
+
+    }
+
     /*
     public void GetInput()
     {

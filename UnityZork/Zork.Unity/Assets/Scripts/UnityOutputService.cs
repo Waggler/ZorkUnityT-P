@@ -12,6 +12,8 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     [SerializeField] private TextMeshProUGUI OutputText;
     [SerializeField] private TMP_InputField InputField;
 
+
+
     public void Clear()
     {
 
@@ -44,7 +46,7 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     void Update()
     //-----------------------//
     {
-        if (Input.GetKey(KeyCode.Return))
+        /*if (Input.GetKey(KeyCode.Return))
         {
             string inputString = InputField.text;
             if (string.IsNullOrWhiteSpace(inputString) == false)
@@ -53,16 +55,17 @@ public class UnityOutputService : MonoBehaviour, IOutputService
             }
 
             InputField.text = string.Empty;
-        }
+        }*/
 
 
     }//END Update
 
+    /*
     void IOutputService.Write(object value)
     {
         throw new NotImplementedException();
     }
-
+    */
     void IOutputService.WriteLine(object value)
     {
         throw new NotImplementedException();
