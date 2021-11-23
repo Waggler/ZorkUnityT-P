@@ -1,94 +1,85 @@
-using System;
-using System.Collections;
+
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Zork;
+using UnityEngine.UI;
 using TMPro;
 using Zork.Common;
+using System;
 
 public class UnityOutputService : MonoBehaviour, IOutputService
 {
+    [SerializeField]
+    private int MaxEntries = 60;
 
-    [SerializeField] private TextMeshProUGUI OutputText;
-    [SerializeField] private TMP_InputField InputField;
-    [SerializeField] private int MaxEntries = 60;
-    [SerializeField] private TextMeshProUGUI NewLinePrefab;
-    [SerializeField] 
+    [SerializeField]
+    private Transform OutputTextContainer;
+
+    [SerializeField]
+    private TextMeshProUGUI TextLinePrefab;
+
+    [SerializeField]
+    private Image NewLinePrefab;
 
 
-    private readonly List<GameObject> mEntries;
+    public UnityOutputService() => mEntries = new List<GameObject>();
 
-    public void Clear()
-    {
-        mEntries.ForEach(entry => Destroy(entry));
-        mEntries.Clear();
-    }
-
+    public void Clear() => mEntries.ForEach(entry => Destroy(entry));
     public void Write(string value) => ParseAndWriteLine(value);
 
-    public void Write(object value) => Write(value.ToString());
+    public void WriteLine(string value) => ParseAndWriteLine(value);
 
-    public void WriteLine(object value)
+    private void ParseAndWriteLine(string value)
     {
-        OutputText.text = value.ToString();
-    }
+        string[] delimiters = { "\n" };
 
-    void WriteLine(string value)
-    {
-        OutputText.text = value;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    //-----------------------//
-    void Update()
-    //-----------------------//
-    {
-        if (Input.GetKey(KeyCode.Return))
+        var lines = value.Split(delimiters, StringSplitOptions.None);
+        foreach (var line in lines)
         {
-            string inputString = InputField.text;
-            if (string.IsNullOrWhiteSpace(inputString) == false)
+            if (mEntries.Count >= MaxEntries)
             {
-                InputReceived?.Invoke(this, inputString);
+                var entry = mEntries.First();
+                Destroy(entry);
+                mEntries.Remove(entry);
             }
 
-            InputField.text = string.Empty;
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                WriteNewLine();
+            }
+            else
+            {
+                WriteTextLine(line);
+            }
+
         }
+    }
 
-
-    }//END Update
-
-    private void WriteNewLine(string value)
+    private void WriteNewLine()
     {
-        var textLine = Instantiate(NewLinePrefab, );
+        var newLine = Instantiate(NewLinePrefab);
         newLine.transform.SetParent(OutputTextContainer, false);
-        mEntries.
+        mEntries.Add(newLine.gameObject);
     }
 
     private void WriteTextLine(string value)
     {
-        var textLine = Instantiate(NewLinePrefab);
-        newLine.transform.SetParent(OutputTextContainer, false);
-        mEntries.
+        var textLine = Instantiate(TextLinePrefab);
+        textLine.transform.SetParent(OutputTextContainer, false);
+        textLine.text = value;
+        mEntries.Add(textLine.gameObject);
     }
 
-    private void ParseAndWriteLine(string value)
+    public void Write(object value)
     {
-        string[] delimiters;
-
+        ParseAndWriteLine(value.ToString());
     }
 
-    void IOutputService.Write(object value)
+    public void WriteLine(object value)
     {
-        throw new NotImplementedException();
+        ParseAndWriteLine(value.ToString());
     }
 
-    void IOutputService.WriteLine(object value)
-    {
-        throw new NotImplementedException();
-    }
+    private readonly List<GameObject> mEntries;
+
 }

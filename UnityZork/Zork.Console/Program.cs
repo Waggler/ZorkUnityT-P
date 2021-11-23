@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Newtonsoft.Json;
 using Zork.Common;
 
@@ -14,48 +13,17 @@ namespace Zork
 
             Game game = JsonConvert.DeserializeObject<Game>(File.ReadAllText(gameFilename));
 
-            ConsoleInputService input = new ConsoleInputService();
             ConsoleOutputService output = new ConsoleOutputService();
+            ConsoleInputService input = new ConsoleInputService();
 
-            //output.WriteLine(string.IsNullOrWhiteSpace(game.WelcomeMessage) ? "Welcome to Zork!" : game); //from in class today
+            game.Player.LocationChanged += Player_LocationChanged;
 
-            //See commented method
-            //game.Player.LocationChanged += Player_LocationChanged;
-
-            Game.StartFromFile(gameFilename, input, output);
-
-            Game.Start(gameFilename, input, output);
-
-            Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
-            /*
-            while (Game.Instance.IsRunning)
-            {
-                output.WriteLine(game Player.Location); //Remove?
-                output.Write("/n> ");
-                input.GetInput();
-            }
-            */
-
-            while (game.IsRunning)
-            {
-                output.WriteLine(game Player.Location);
-                if (previousRoom != game.Player.Location)
-                {
-                    game.Look(game);
-                    previousRoom = game.Player.Location;
-                }
-
-                output.Write("\n ");
-
-            }
-
-            /*
             output.WriteLine(string.IsNullOrWhiteSpace(game.WelcomeMessage) ? "Welcome to Zork!" : game.WelcomeMessage);
             game.Start(input, output);
 
-            Room previousRoom = null;
             while (game.IsRunning)
             {
+                Room previousRoom = null;
                 output.WriteLine(game.Player.Location);
                 if (previousRoom != game.Player.Location)
                 {
@@ -66,17 +34,15 @@ namespace Zork
                 output.Write("\n> ");
                 input.ProcessInput();
             }
-            */
-            output.WriteLine(string.IsNullOrWhiteSpace(game.ExitMessage) ? "Thank you for playing!" : game.ExitMessage);
 
+            output.WriteLine(string.IsNullOrWhiteSpace(game.ExitMessage) ? "Thank you for playing!" : game.ExitMessage);
         }
 
-        /*
-        private static void Player_LocationChanged(object sender, Room e) //Something like this will be used in Unity
+        private static void Player_LocationChanged(object sender, Room e)
         {
             System.Console.WriteLine($"You moved to {e.Name}");
         }
-        */
+
         private enum CommandLineArguments
         {
             GameFilename = 0

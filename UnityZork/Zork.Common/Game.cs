@@ -3,50 +3,32 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
-using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Newtonsoft.Json;
-using System.Text;
+using Zork.Common;
 
-namespace Zork.Common //Zork
+namespace Zork
 {
     public class Game : INotifyPropertyChanged
     {
-        public event EventHandler GameStarted;
-        public event EventHandler GameStopped;
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public World World { get; private set; }
 
         public string StartingLocation { get; set; }
 
-        [JsonProperty]
-        public string WelcomeMessage = null;
+        public string WelcomeMessage { get; set; }
 
         public string ExitMessage { get; set; }
 
         [JsonIgnore]
         public Player Player { get; private set; }
-
         [JsonIgnore]
-        public bool IsRunning { get; }
+        public bool IsRunning { get; set; }
 
-        [JsonIgnore]
         public IInputService Input { get; set; }
 
-        [JsonIgnore]
         public IOutputService Output { get; set; }
-
-        [JsonIgnore]
-        public static Game Instance { get; private set; }
-
-        [JsonIgnore]
-        public CommandManager CommandManager { get; }
-
 
         [JsonIgnore]
         public Dictionary<string, Command> Commands { get; private set; }
@@ -60,129 +42,32 @@ namespace Zork.Common //Zork
             {
                 { "QUIT", new Command("QUIT", new string[] { "QUIT", "Q", "BYE" }, Quit) },
                 { "LOOK", new Command("LOOK", new string[] { "LOOK", "L" }, Look) },
-                { "NORTH", new Command("NORTH", new string[] { "NORTH", "N" }, game => Move(game, Directions.North)) },
-                { "SOUTH", new Command("SOUTH", new string[] { "SOUTH", "S" }, game => Move(game, Directions.South)) },
-                { "EAST", new Command("EAST", new string[] { "EAST", "E"}, game => Move(game, Directions.East)) },
-                { "WEST", new Command("WEST", new string[] { "WEST", "W" }, game => Move(game, Directions.West)) },
+                { "NORTH", new Command("NORTH", new string[] { "NORTH", "N" }, game => Move(game, Directions.NORTH)) },
+                { "SOUTH", new Command("SOUTH", new string[] { "SOUTH", "S" }, game => Move(game, Directions.SOUTH)) },
+                { "EAST", new Command("EAST", new string[] { "EAST", "E"}, game => Move(game, Directions.EAST)) },
+                { "WEST", new Command("WEST", new string[] { "WEST", "W" }, game => Move(game, Directions.WEST)) },
             };
         }
 
-        public Game() => CommandManager = new CommandManager();
-
-        private void LoadCommands()
+        public void Start(IInputService input, IOutputService output)
         {
-            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-
-            foreach (Type type in types)
-            {
-                CommandClassAttribute commandClassAttribute = type.GetCustomAttribute<CommandClassAttribute>();
-                if (commandClassAttribute != null)
-                {
-                    MethodInfo[] methods = type.GetMethods();
-                    foreach (MethodInfo method in methods)
-                    {
-                        CommandAttribute commandAttribute = method.GetCustomAttribute<CommandAttribute>();
-                        if (commandAttribute != null)
-                        {
-                            Command command = new Command(commandAttribute.CommandName, commandAttribute.Verbs,
-                                (Action<Game, CommandContext>)Delegate.CreateDelegate(typeof(Action<Game, CommandContext>), method));
-                            CommandManager.AddCommand(command);
-                        }
-                    }
-                }
-            }
-        }
-
-        public static void StartFromFile(string gameFileName, IInputService input, IOutputService output)
-        {
-            if (!File.Exists(gameFileName))
-            {
-                throw new FileNotFoundException("Expected file.", gameFileName);
-            }
-
-            Start(File.ReadAllText(gameFileName, input, output);
-
-        }
-
-
-        public static Game Load(string jsonString)
-        {
-            Game game = JsonConvert.DeserializeObject<Game>(jsonString);
-            game.Player = game.World.SpawnPlayer();
-
-            return game;
-        }
-
-        
-        private static void Input_InputReceivedHandler(object sender, string inputString)
-        {
-            Room previousRoom = Player.Location;
-            if (ComandManager.PerformCommand(this.inputString.Trim()){
-                Player.Moves++;
-
-                if previousRoom != Player.Location{
-                    Common.PerformCommand(this, "LOOK");
-                }
-            }
-        }
-
-        public static Game Load(string jsonString)
-        {
-            Game game = JsonConvert.DeserializeObject<Game>(jsonString);
-            game.Player = game.World.SpawnPlayer();
-
-            return game;
-        }
-
-        public static void Start(string gameJsonString, IInputService input, IOutputService output) // should we have added Instance. like he does at 5:56?
-        {
-
-            if (!File.Exists(gameJsonString))
-            {
-                throw new FileNotFoundException("Excepted File.", gameJsonString);
-            }
-
-            while (Instance == null || Instance.mIsRestarting)
-            {
-                Instance = Load(gameJsonString);
-                Instance.Input = input;
-                Instance.Output = output;
-                Instance.LoadCommands();
-                Instance.DisplayWelcomeMessage();
-            }
-
-            /*
             Assert.IsNotNull(input);
-            Instance = LoaderOptimization(gameJsonString);
             Input = input;
-            Input.InputReceived += InputReceivedHandler;
+            Input.InputRecieved += InputRecievedHandler;
 
             Assert.IsNotNull(output);
             Output = output;
 
-            IsRunning = true;// Comment out? or replace with Instance.IsRunning = true;
-            */
-
-
-
-            Instance = Load(gameJsonString);
-            Instance.Input = input;
-            Instance.Output = output;
-            Instance.LoadCommands();
-            Instance.DisplayWelcomeMessage();
-            Instance.IsRunning = true;
-
-            Instance.Input.InputReceived += Instance.InputReceivedHandler;
-
+            IsRunning = true;
         }
 
-        private void InputReceivedHandler(object sender, string inputString)
+        private void InputRecievedHandler(object sender, string commandString)
         {
 
             Command foundCommand = null;
             foreach (Command command in Commands.Values)
             {
-                if (command.Verbs.Contains(inputString))
+                if (command.Verbs.Contains(commandString))
                 {
                     foundCommand = command;
                     break;
@@ -192,6 +77,7 @@ namespace Zork.Common //Zork
             if (foundCommand != null)
             {
                 foundCommand.Action(this);
+                Player.Moves++;
             }
             else
             {
@@ -207,105 +93,19 @@ namespace Zork.Common //Zork
             }
         }
 
-        private void Run()
-        {
-            IsRunning = true;
-            Room previousRoom = null;
-            while (IsRunning)
-            {
-                Console.WriteLine(Player.Location);
-                if (previousRoom != Player.Location)
-                {
-                    CommandManager.PerformCommand(this, "LOOK");
-                    previousRoom = Player.Location;
-                }
-
-                Console.Write("\n> ");
-                if (CommandManager.PerformCommand(this, Console.ReadLine().Trim()))
-                {
-                    Player.Moves++;
-                }
-                else
-                {
-                    Console.WriteLine("That's not a verb I recognize.");
-                }
-            }
-        }
-
-        public void Restart()
-        {
-            IsRunning = false;
-            mIsRestarting = true;
-            Console.Clear();
-        }
-
         public static void Look(Game game) => game.Output.WriteLine(game.Player.Location.Description);
 
-        //private static void Quit(Game game) => game.IsRunning = false;
-        private static void Quit() => IsRunning = false;
+        private static void Quit(Game game) => game.IsRunning = false;
 
-        //from class
-        private static void Quit(Game game)
-        {
-            game.IsRunning = false;
-            game.GameStopped?.Invoke(game, EventArgs.Empty);
-        }
+        private static void Reward(Game game) => game.Player.Score += 1;
 
-        private void LoadScripts()
+        private static void ScoreCheck(Game game)
         {
-            foreach (string file in Directory.EnumerateFiles(ScriptDirectory, ScriptFileExtension))
+            if (game.Player.Moves == 1)
             {
-                try
-                {
-                    var scriptOptions = ScriptOptions.Default.AddReferences(Assembly.GetExecutingAssembly());
-#if DEBUG
-                    scriptOptions = scriptOptions.WithEmitDebugInformation(true)
-                        .WithFilePath(new FileInfo(file).FullName)
-                        .WithFileEncoding(Encoding.UTF8);
-#endif
-                    string script = File.ReadAllText(file);
-                    CSharpScript.RunAsync(script, scriptOptions).Wait();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error compiling script: {file} Error: {ex.Message}");
-                }
+                game.Output.WriteLine($"Your score is:{game.Player.Score} and you have made {game.Player.Moves} move(s)");
             }
         }
-
-
-        public bool ConfirmAction(string prompt)
-        {
-            Console.Write(prompt);
-
-            while (true)
-            {
-                string response = Console.ReadLine().Trim().ToUpper();
-                if (response == "YES" || response == "Y")
-                {
-                    return true;
-                }
-                else if (response == "NO" || response == "N")
-                {
-                    return false;
-                }
-                else
-                {
-                    Console.Write("Please answer yes or no.> ");
-                }
-            }
-        }
-
-
-        private void DisplayWelcomeMessage() => Console.WriteLine(WelcomeMessage);
-
-        public static readonly Random Random = new Random();
-        public static readonly string ScriptDirectory = "Scripts";
-        private static readonly string ScriptFileExtension = "*.csx";
-
-
-        private bool IsRunning;
-        private bool mIsRestarting;
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) => Player = new Player(World, StartingLocation);

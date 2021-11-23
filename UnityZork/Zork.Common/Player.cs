@@ -1,16 +1,18 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
-namespace Zork
+namespace Zork.Common
+
 {
     public class Player
     {
 
         public event EventHandler<Room> LocationChanged;
 
-        public World World { get; }
+        public event EventHandler<int> ScoreChanged;
 
-        public int Moves;
+        public event EventHandler<int> MovesChanged;
+        public World World { get; }
 
         [JsonIgnore]
         public Room Location
@@ -25,7 +27,38 @@ namespace Zork
                 {
                     _location = value;
                     LocationChanged?.Invoke(this, _location);
+                }
+            }
+        }
 
+        public int Moves
+        {
+            get
+            {
+                return _moves;
+            }
+            set
+            {
+                if (_moves != value)
+                {
+                    _moves = value;
+                    MovesChanged?.Invoke(this, _moves);
+                }
+            }
+        }
+
+        public int Score
+        {
+            get
+            {
+                return _score;
+            }
+            set
+            {
+                if (_score != value)
+                {
+                    _score = value;
+                    ScoreChanged?.Invoke(this, _score);
                 }
             }
         }
@@ -49,9 +82,8 @@ namespace Zork
 
             return isValidMove;
         }
-
         private Room _location;
-
-
+        private int _score;
+        private int _moves;
     }
 }

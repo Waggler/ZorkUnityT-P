@@ -1,72 +1,38 @@
-using UnityEngine;
-using Zork.Common;
 using Zork;
+using Zork.Common;
+using UnityEngine;
+using Newtonsoft.Json;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private string ZorkGameFileAssetName = "Zork";
-    [SerializeField] private UnityInputService InputService;
-    [SerializeField] private UnityOutputService OutputService;
+    [SerializeField]
+    private TextMeshProUGUI CurrentLocationText;
 
-    private Game _game;
+    [SerializeField]
+    private TextMeshProUGUI MovesText;
 
+    [SerializeField]
+    private TextMeshProUGUI ScoreText;
 
-    //-----------------------//
-    void Awake()
-    //-----------------------//
-    {
-        TextAsset gameJsonAsset = Resources.Load<TextAsset>(ZorkGameFileAssetName);
+    //[SerializeField]
+    //private UnityInputService InputService;
 
-        Game.Start(gameJsonAsset.text, InputService, OutputService);
-        Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
+    [SerializeField]
+    private UnityOutputService OutputService;
 
-    }//END Awake
-
-    //-----------------------//
     void Start()
-    //-----------------------//
     {
-        TextAsset gameTextAsset = Resources.Load<TextAsset>("Zork");
-        _game = JsonConvert.DeserializeObject<Game>(gameTextAsset.text);
-        _game.Start(InputService, OutputService);
+        TextAsset gametextAsset = Resources.Load<TextAsset>("Zork");
+        _game = JsonConvert.DeserializeObject<Game>(gametextAsset.text);
+        _game.Player.LocationChanged += (sender, Location) => CurrentLocationText.text = $"Location: {Location.ToString()}";
+        //_game.Start(InputService, OutputService);
+        //_game.Player.MovesChanged += (sender, moves) => MovesText.text = $"Moves: {moves.ToString()}";
+        //_game.Player.ScoreChanged += (sender, score) => ScoreText.text = $"Score: {score.ToString()}";
 
-
-        //_game.Player.LocationChanged += (sender, locatiom) => { if (CurrentLocationText != null) {CurrentLocationText = location.ToString(); }
-        //_game.Player.MovesChanged += (sender, locatiom) => { if (MovesText != null) {MovesText = moves.ToString(); }
-        //_game.Player.ScoreChanged += (sender, locatiom) => { if (ScoreText != null) {ScoreText = score.ToString(); }
-
-    }//END Start
-
-    //-----------------------//
-    void Update()
-    //-----------------------//
-    {
-        //Moving to inputfield enter/onEndEdit
-        /*
-        if (Input.GetKey(KeyCode.Return))
-        {
-            InputService.ProcessInput();    
-        }
-        */
-
-    }//END Update
-
-    private void _game_GameStopped(object sender, System.EventArgs e)
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
     }
 
-    //-----------------------//
-    public void GetEnter()
-    //-----------------------//
-    {
-        IInputService.ProcessInput();
 
 
-    }//END Update
-
+    private Game _game;
 }//END GameManager

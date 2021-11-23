@@ -6,6 +6,6 @@
 
         void WriteLine(object value);
 
+        void Clear();
     }
-
 }

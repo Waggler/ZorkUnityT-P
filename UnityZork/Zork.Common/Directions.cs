@@ -2,11 +2,14 @@
 {
     public enum Directions
     {
-        North,
-        South,
-        East,
-        West,
-        Up,
-        Down
-    } 
+        QUIT,
+        LOOK,
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST,
+        UNKNOWN,
+        REWARD,
+        SCORE
+    }
 }

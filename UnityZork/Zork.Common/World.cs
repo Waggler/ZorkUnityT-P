@@ -15,8 +15,6 @@ namespace Zork
         [JsonIgnore]
         public IReadOnlyDictionary<string, Room> RoomsByName => _roomsByName;
 
-        public Player SpawnPlayer() => new Player(this, StartingLocation);
-
         public World()
         {
             Rooms = new List<Room>();
@@ -32,10 +30,7 @@ namespace Zork
             {
                 room.UpdateNeighbors(this);
             }
-        } 
-
-        [JsonProperty]
-        private string StartingLocation { get; set; }
+        }
 
         private Dictionary<string, Room> _roomsByName;
     }

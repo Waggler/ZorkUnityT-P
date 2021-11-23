@@ -3,14 +3,15 @@ using Zork.Common;
 
 namespace Zork
 {
-    class ConsoleInputService : IInputService
+    internal class ConsoleInputService : IInputService
     {
-        public event EventHandler<string> InputReceived;
+        public event EventHandler<string> InputRecieved;
 
         public void ProcessInput()
         {
             string inputString = Console.ReadLine().Trim().ToUpper();
-            InputReceived?.Invoke(this, inputString);
+            InputRecieved?.Invoke(this, inputString);
         }
     }
 }
+

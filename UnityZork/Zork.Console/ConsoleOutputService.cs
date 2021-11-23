@@ -3,17 +3,32 @@ using Zork.Common;
 
 namespace Zork
 {
-    class ConsoleOutputService : IOutputService
+    internal class ConsoleOutputService : IOutputService
     {
-        public void Write(object value)
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(string value)
         {
             Console.Write(value);
         }
 
-        public void WriteLine(object value)
+        public void Write(object value)
+        {
+            Console.WriteLine(value.ToString());
+        }
+
+        public void WriteLine(string value)
         {
             Console.WriteLine(value);
+        }
 
+        public void WriteLine(object value)
+        {
+            Console.WriteLine(value.ToString());
         }
     }
 }
+
