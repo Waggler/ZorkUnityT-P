@@ -29,14 +29,6 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     //---------------------//
 
     //---------------------//
-    public void Write(string value) => ParseAndWriteLine(value);
-    //---------------------//
-
-    //---------------------//
-    public void WriteLine(string value) => ParseAndWriteLine(value);
-    //---------------------//
-
-    //---------------------//
     private void ParseAndWriteLine(string value)
     //---------------------//
     {
@@ -73,6 +65,7 @@ public class UnityOutputService : MonoBehaviour, IOutputService
         var newLine = Instantiate(NewLinePrefab);
         newLine.transform.SetParent(OutputTextContainer, false);
         mEntries.Add(newLine.gameObject);
+
     }//END WriteNewLine
 
     //---------------------//
@@ -83,6 +76,7 @@ public class UnityOutputService : MonoBehaviour, IOutputService
         textLine.transform.SetParent(OutputTextContainer, false);
         textLine.text = value;
         mEntries.Add(textLine.gameObject);
+
     }//END WriteTextLine
 
     //---------------------//
@@ -90,6 +84,7 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     //---------------------//
     {
         ParseAndWriteLine(value.ToString());
+
     }//END Write
 
     //---------------------//
@@ -97,6 +92,7 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     //---------------------//
     {
         ParseAndWriteLine(value.ToString());
+
     }//END WriteLine
 
 
