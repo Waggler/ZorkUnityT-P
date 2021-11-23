@@ -55,7 +55,7 @@ public class UnityOutputService : MonoBehaviour, IOutputService
         }
     }
 
-    private void WriteNewLine()
+    public void WriteNewLine()
     {
         var newLine = Instantiate(NewLinePrefab);
         newLine.transform.SetParent(OutputTextContainer, false);

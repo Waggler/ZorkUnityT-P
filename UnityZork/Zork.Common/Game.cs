@@ -17,6 +17,8 @@ namespace Zork
 
         public string StartingLocation { get; set; }
 
+        public Room previousLocation { get; set; }
+
         public string WelcomeMessage { get; set; }
 
         public string ExitMessage { get; set; }
@@ -46,6 +48,8 @@ namespace Zork
                 { "SOUTH", new Command("SOUTH", new string[] { "SOUTH", "S" }, game => Move(game, Directions.SOUTH)) },
                 { "EAST", new Command("EAST", new string[] { "EAST", "E"}, game => Move(game, Directions.EAST)) },
                 { "WEST", new Command("WEST", new string[] { "WEST", "W" }, game => Move(game, Directions.WEST)) },
+                { "REWARD", new Command("REWARD", new string[] { "REWARD", "R"}, Reward) },
+                { "SCORE", new Command("SCORE", new string[] { "SCORE"}, ScoreCheck) },
             };
         }
 
@@ -78,6 +82,8 @@ namespace Zork
             {
                 foundCommand.Action(this);
                 Player.Moves++;
+
+                
             }
             else
             {
@@ -91,6 +97,18 @@ namespace Zork
             {
                 game.Output.WriteLine("The way is shut!");
             }
+            else
+            {
+                game.Output.WriteLine($"You moved {direction}");
+            }
+
+            if (game.previousLocation != game.Player.Location)
+            {
+                game.previousLocation = game.Player.Location;
+                Look(game);
+            }
+            string value = " ";
+            game.Output.WriteLine(value);
         }
 
         public static void Look(Game game) => game.Output.WriteLine(game.Player.Location.Description);
@@ -101,7 +119,7 @@ namespace Zork
 
         private static void ScoreCheck(Game game)
         {
-            if (game.Player.Moves == 1)
+            if (game.Player.Moves > 0)
             {
                 game.Output.WriteLine($"Your score is:{game.Player.Score} and you have made {game.Player.Moves} move(s)");
             }
