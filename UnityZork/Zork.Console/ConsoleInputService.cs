@@ -7,11 +7,16 @@ namespace Zork
     {
         public event EventHandler<string> InputRecieved;
 
+        //---------------------//
         public void ProcessInput()
+        //---------------------//
         {
             string inputString = Console.ReadLine().Trim().ToUpper();
             InputRecieved?.Invoke(this, inputString);
-        }
-    }
+
+        }//END ProcessInput
+
+    }//END ConsoleInputService
+
 }
 

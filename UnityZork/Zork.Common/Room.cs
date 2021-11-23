@@ -51,27 +51,36 @@ namespace Zork
 
         public override int GetHashCode() => Name.GetHashCode();
 
+        //---------------------//
         public void UpdateNeighbors(World world)
+        //---------------------//
         {
             _neighbors.Clear();
             foreach (var entry in NeighborNames)
             {
                 _neighbors.Add(entry.Key, world.RoomsByName[entry.Value]);
             }
-        }
+        }//END UpdateNeighbors
 
+        //---------------------//
         public void RemoveNeighbor(Directions direction)
+        //---------------------//
         {
             _neighbors.Remove(direction);
             NeighborNames.Remove(direction);
-        }
 
+        }//END RemoveNeighbor
+
+        //---------------------//
         public void AssignNeighbor(Directions direction, Room neighbor)
+        //---------------------//
         {
             _neighbors[direction] = neighbor;
             NeighborNames[direction] = neighbor.Name;
-        }
+
+        }//END AssignNeighbor
 
         private Dictionary<Directions, Room> _neighbors = new Dictionary<Directions, Room>();
-    }
+
+    }//END Room
 }

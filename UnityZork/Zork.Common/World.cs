@@ -30,7 +30,8 @@ namespace Zork
             {
                 room.UpdateNeighbors(this);
             }
-        }
+
+        }//END OnDeserialized
 
         private Dictionary<string, Room> _roomsByName;
     }

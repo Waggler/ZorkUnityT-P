@@ -11,6 +11,7 @@ namespace Zork
 {
     public class Game : INotifyPropertyChanged
     {
+        [Header("Components")]
         public event PropertyChangedEventHandler PropertyChanged;
 
         public World World { get; private set; }
@@ -35,7 +36,11 @@ namespace Zork
         [JsonIgnore]
         public Dictionary<string, Command> Commands { get; private set; }
 
+        #region Methods
+
+        //---------------------//
         public Game(World world, Player player)
+        //---------------------//
         {
             World = world;
             Player = player;
@@ -50,10 +55,14 @@ namespace Zork
                 { "WEST", new Command("WEST", new string[] { "WEST", "W" }, game => Move(game, Directions.WEST)) },
                 { "REWARD", new Command("REWARD", new string[] { "REWARD", "R"}, Reward) },
                 { "SCORE", new Command("SCORE", new string[] { "SCORE"}, ScoreCheck) },
-            };
-        }
 
+            };
+
+        }//END Game
+
+        //---------------------//
         public void Start(IInputService input, IOutputService output)
+        //---------------------//
         {
             Assert.IsNotNull(input);
             Input = input;
@@ -63,9 +72,16 @@ namespace Zork
             Output = output;
 
             IsRunning = true;
-        }
 
+        }//END Start
+
+
+        #region Game Functions
+
+
+        //---------------------//
         private void InputRecievedHandler(object sender, string commandString)
+        //---------------------//
         {
 
             Command foundCommand = null;
@@ -89,9 +105,12 @@ namespace Zork
             {
                 Output.WriteLine("Unknown command.");
             }
-        }
 
+        }//END InputRecievedHandler
+
+        //---------------------//
         private static void Move(Game game, Directions direction)
+        //---------------------//
         {
             if (game.Player.Move(direction) == false)
             {
@@ -109,23 +128,43 @@ namespace Zork
             }
             string value = " ";
             game.Output.WriteLine(value);
-        }
 
+        }//END Move
+
+        //---------------------//
         public static void Look(Game game) => game.Output.WriteLine(game.Player.Location.Description);
+        //---------------------//
 
+        //---------------------//
         private static void Quit(Game game) => game.IsRunning = false;
+        //---------------------//
 
+        //---------------------//
         private static void Reward(Game game) => game.Player.Score += 1;
+        //---------------------//
 
+        //---------------------//
         private static void ScoreCheck(Game game)
+        //---------------------//
         {
             if (game.Player.Moves > 0)
             {
                 game.Output.WriteLine($"Your score is:{game.Player.Score} and you have made {game.Player.Moves} move(s)");
             }
-        }
+
+        }//END ScoreCheck
+
+
+        #endregion Game Functions
+
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) => Player = new Player(World, StartingLocation);
-    }
+
+
+        #endregion Methods
+
+
+    }//END Game
+
 }

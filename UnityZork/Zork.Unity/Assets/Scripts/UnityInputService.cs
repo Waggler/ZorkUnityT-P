@@ -5,11 +5,14 @@ using Zork.Common;
 
 public class UnityInputService : MonoBehaviour, IInputService
 {
+    [Header("Components")]
     public TMP_InputField InputField;
 
     public event EventHandler<string> InputRecieved;
 
+    //---------------------//
     private void Update()
+    //---------------------//
     {
         if (Input.GetKey(KeyCode.Return))
         {
@@ -23,5 +26,7 @@ public class UnityInputService : MonoBehaviour, IInputService
             InputField.Select();
             InputField.ActivateInputField();
         }
-    }
-}
+
+    }//END Update
+
+}//END UnityInputService

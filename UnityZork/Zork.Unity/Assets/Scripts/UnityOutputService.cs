@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,15 +20,25 @@ public class UnityOutputService : MonoBehaviour, IOutputService
     [SerializeField]
     private Image NewLinePrefab;
 
+    private readonly List<GameObject> mEntries;
 
     public UnityOutputService() => mEntries = new List<GameObject>();
 
+    //---------------------//
     public void Clear() => mEntries.ForEach(entry => Destroy(entry));
+    //---------------------//
+
+    //---------------------//
     public void Write(string value) => ParseAndWriteLine(value);
+    //---------------------//
 
+    //---------------------//
     public void WriteLine(string value) => ParseAndWriteLine(value);
+    //---------------------//
 
+    //---------------------//
     private void ParseAndWriteLine(string value)
+    //---------------------//
     {
         string[] delimiters = { "\n" };
 
@@ -53,33 +62,42 @@ public class UnityOutputService : MonoBehaviour, IOutputService
             }
 
         }
-    }
 
+    }//END ParseAndWriteLine
+
+
+    //---------------------//
     public void WriteNewLine()
+    //---------------------//
     {
         var newLine = Instantiate(NewLinePrefab);
         newLine.transform.SetParent(OutputTextContainer, false);
         mEntries.Add(newLine.gameObject);
-    }
+    }//END WriteNewLine
 
+    //---------------------//
     private void WriteTextLine(string value)
+    //---------------------//
     {
         var textLine = Instantiate(TextLinePrefab);
         textLine.transform.SetParent(OutputTextContainer, false);
         textLine.text = value;
         mEntries.Add(textLine.gameObject);
-    }
+    }//END WriteTextLine
 
+    //---------------------//
     public void Write(object value)
+    //---------------------//
     {
         ParseAndWriteLine(value.ToString());
-    }
+    }//END Write
 
+    //---------------------//
     public void WriteLine(object value)
+    //---------------------//
     {
         ParseAndWriteLine(value.ToString());
-    }
+    }//END WriteLine
 
-    private readonly List<GameObject> mEntries;
 
-}
+}//END UnityOutputService

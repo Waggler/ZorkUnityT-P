@@ -6,7 +6,15 @@ namespace Zork
 {
     internal class Program
     {
+
+        private enum CommandLineArguments
+        {
+            GameFilename = 0
+        }
+
+        //---------------------//
         static void Main(string[] args)
+        //---------------------//
         {
             const string defaultGameFilename = "Zork.json";
             string gameFilename = (args.Length > 0 ? args[(int)CommandLineArguments.GameFilename] : defaultGameFilename);
@@ -19,6 +27,7 @@ namespace Zork
             game.Player.LocationChanged += Player_LocationChanged;
 
             output.WriteLine(string.IsNullOrWhiteSpace(game.WelcomeMessage) ? "Welcome to Zork!" : game.WelcomeMessage);
+
             game.Start(input, output);
 
             while (game.IsRunning)
@@ -32,20 +41,23 @@ namespace Zork
                 }
 
                 output.Write("\n> ");
+
                 input.ProcessInput();
             }
 
             output.WriteLine(string.IsNullOrWhiteSpace(game.ExitMessage) ? "Thank you for playing!" : game.ExitMessage);
-        }
 
+        }//END Main
+
+        //---------------------//
         private static void Player_LocationChanged(object sender, Room e)
+        //---------------------//
         {
             System.Console.WriteLine($"You moved to {e.Name}");
-        }
 
-        private enum CommandLineArguments
-        {
-            GameFilename = 0
-        }
-    }
+        }//END Player_LocationChanged
+
+
+    }//END Program
+
 }

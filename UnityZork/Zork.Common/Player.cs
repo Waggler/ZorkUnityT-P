@@ -6,6 +6,10 @@ namespace Zork.Common
 {
     public class Player
     {
+        
+        private Room _location;
+        private int _score;
+        private int _moves;
 
         public event EventHandler<Room> LocationChanged;
 
@@ -82,8 +86,6 @@ namespace Zork.Common
 
             return isValidMove;
         }
-        private Room _location;
-        private int _score;
-        private int _moves;
-    }
+
+    }//END Player
 }
