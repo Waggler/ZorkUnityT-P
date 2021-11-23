@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
+using System.IO; //Remove?
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -10,14 +10,18 @@ namespace Zork.Common //Zork
 {
     public class Game : INotifyPropertyChanged
     {
+
+        public event EventHandler GameStarted;
+        public event EventHandler GameStopped;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public World World { get; private set; }
 
         public string StartingLocation { get; set; }
-        
+
         public string WelcomeMessage { get; set; }
-        
+
         public string ExitMessage { get; set; }
 
         [JsonIgnore]
@@ -28,7 +32,7 @@ namespace Zork.Common //Zork
         //These ignores were not added in class
         //[JsonIgnore]
         public IInputService Input { get; set; }
-        
+
         //[JsonIgnore]
         public IOutputService Output { get; set; }
 
@@ -82,9 +86,9 @@ namespace Zork.Common //Zork
                 previousRoom = Player.Location;
             }
         }
-
         */
 
+        /*
         public void Start(string gameJsonString, IInputService input, IOutputService output) // should we have added Instance. like he does at 5:56?
         {
             Assert.IsNotNull(input);
@@ -104,46 +108,65 @@ namespace Zork.Common //Zork
             Instance.DisplayWelcomeMessage();
             Instance.IsRunning = true;
             */
-            Instance.Input.InputReceived += Instance.InputReceivedHandler;
+        Instance.Input.InputReceived += Instance.InputReceivedHandler;
 
         }
+        */
 
-        private void InputReceivedHandler(object sender, string inputString)
-        {
+    public void Start(IInputService input, IOutputService output)
+    {
+        Assert.IsNotNull(input);
+        Input = input;
+        Input.InputReceived += InputReceivedHandler;
 
-            Command foundCommand = null;
-            foreach (Command command in Commands.Values)
-            {
-                if (command.Verbs.Contains(inputString))
-                {
-                    foundCommand = command;
-                    break;
-                }
-            }
+        Assert.IsNotNull(output);
+        Output = output;
 
-            if (foundCommand != null)
-            {
-                foundCommand.Action(this);
-            }
-            else
-            {
-                Output.WriteLine("Unknown command.");
-            }
-        }
+        IsRunning = true;
+        GameStarted?.Invoke(this, EventArgs.Empty); //Swap to? game.GameStarted?.Invoke(game, EventArgs.Empty);
 
-        private static void Move(Game game, Directions direction)
-        {
-            if (game.Player.Move(direction) == false)
-            {
-                game.Output.WriteLine("The way is shut!");
-            }
-        }
-
-        public static void Look(Game game) => game.Output.WriteLine(game.Player.Location.Description);
-
-        private static void Quit(Game game) => game.IsRunning = false;
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context) => Player = new Player(World, StartingLocation);
     }
+
+    private void InputReceivedHandler(object sender, string inputString)
+    {
+
+        Command foundCommand = null;
+        foreach (Command command in Commands.Values)
+        {
+            if (command.Verbs.Contains(inputString))
+            {
+                foundCommand = command;
+                break;
+            }
+        }
+
+        if (foundCommand != null)
+        {
+            foundCommand.Action(this);
+        }
+        else
+        {
+            Output.WriteLine("Unknown command.");
+        }
+    }
+
+    private static void Move(Game game, Directions direction)
+    {
+        if (game.Player.Move(direction) == false)
+        {
+            game.Output.WriteLine("The way is shut!");
+        }
+    }
+
+    public static void Look(Game game) => game.Output.WriteLine(game.Player.Location.Description);
+
+    private static void Quit(Game game)
+    {
+        game.IsRunning = false;
+        game.GameStopped?.Invoke(game, EventArgs.Empty);
+    }
+
+    [OnDeserialized]
+    private void OnDeserialized(StreamingContext context) => Player = new Player(World, StartingLocation);
+}
 }

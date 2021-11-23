@@ -17,21 +17,38 @@ namespace Zork
             ConsoleInputService input = new ConsoleInputService();
             ConsoleOutputService output = new ConsoleOutputService();
 
-            //See commented method
+            output.WriteLine(string.IsNullOrWhiteSpace(game.WelcomeMessage) ? "Welcome to Zork!" : game.WelcomeMessage);
+            game.Start(input, output);
+
+            Room previousRoom = null;
+
+            while (game.IsRunning)
+            {
+                output.WriteLine(game.Player.Location);
+                if (previousRoom != game.Player.Location)
+                {
+                    game.Look(game);
+                    previousRoom = game.Player.Location;
+                }
+                output.Write("\n> ");
+                input.ProcessInput();
+
+            }
+
             //game.Player.LocationChanged += Player_LocationChanged;
 
-            Game.StartFromFile(gameFilename, input, output);
+            //Game.StartFromFile(gameFilename, input, output);
             //Game.Instance.CommandManager.PerformCommand(Game.Instance, "LOOK");
             
+            /*
             while (Game.Instance.IsRunning)
             {
                 output.WriteLine(game Player.Location); //Remove?
                 output.Write("/n> ");
                 input.GetInput();
             }
-
+            */
             /*
-            output.WriteLine(string.IsNullOrWhiteSpace(game.WelcomeMessage) ? "Welcome to Zork!" : game.WelcomeMessage);
             game.Start(input, output);
 
             Room previousRoom = null;
@@ -48,6 +65,7 @@ namespace Zork
                 input.ProcessInput();
             }
             */
+
             output.WriteLine(string.IsNullOrWhiteSpace(game.ExitMessage) ? "Thank you for playing!" : game.ExitMessage);
 
         }
@@ -58,6 +76,7 @@ namespace Zork
             System.Console.WriteLine($"You moved to {e.Name}");
         }
         */
+
         private enum CommandLineArguments
         {
             GameFilename = 0
