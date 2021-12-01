@@ -11,6 +11,7 @@ namespace Zork
 {
     public class Game : INotifyPropertyChanged
     {
+        [Header("Components")]
         public event PropertyChangedEventHandler PropertyChanged;
 
         public World World { get; private set; }
