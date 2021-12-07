@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Zork.Common
 
@@ -10,6 +11,8 @@ namespace Zork.Common
         private Room _location;
         private int _score;
         private int _moves;
+
+        public List<Item> Inventory { get; set; } = new List<Item>();
 
         public event EventHandler<Room> LocationChanged;
 

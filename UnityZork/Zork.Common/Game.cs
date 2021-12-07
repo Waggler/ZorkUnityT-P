@@ -169,8 +169,20 @@ namespace Zork
         }//END Move
 
         //---------------------//
-        public static void Look(Game game) => game.Output.WriteLine(game.Player.Location.Description);
+        public static void Look(Game game)
         //---------------------//
+        {
+            game.Output.WriteLine(game.Player.Location.Description);
+            if (game.Player.Location.Items != null)
+            {
+                foreach(Item item in game.Player.Location.Items)
+                {
+                    game.Output.WriteLine(item.Description);
+                }
+
+            }
+            //game.Output.Write(" ");
+        }
 
         //---------------------//
         private static void Quit(Game game) => game.IsRunning = false;
@@ -185,7 +197,19 @@ namespace Zork
         //---------------------//
         {
             //game.Player.Inventory
-            game.Output.WriteLine(subject);
+            foreach (Item item in game.Player.Location.Items)
+            {
+                if (item.Name == subject)
+                {
+                    game.Player.Inventory.Add(item);
+                    game.Player.Location.Items.Remove(item);
+
+                    game.Output.WriteLine($"Took {subject}");
+                    game.Output.Write(" ");
+                    return;
+                }
+            }
+            game.Output.WriteLine($"That isn't isn't here");
             game.Output.Write(" ");
 
         }
@@ -194,8 +218,19 @@ namespace Zork
         private static void Drop(Game game, string subject)
         //---------------------//
         {
-            //game.Player.Inventory
-            game.Output.WriteLine(subject);
+            foreach (Item item in game.Player.Inventory)
+            {
+                if (item.Name == subject)
+                {
+                    game.Player.Location.Items.Add(item);
+                    game.Player.Inventory.Remove(item);
+
+                    game.Output.WriteLine($"Dropped {subject}");
+                    game.Output.Write(" ");
+                    return;
+                }
+            }
+            game.Output.WriteLine($"You don't have that");
             game.Output.Write(" ");
 
         }
@@ -216,7 +251,22 @@ namespace Zork
         private static void ShowInventory(Game game)
         //---------------------//
         {
-            
+            if (game.Player.Inventory != null)
+            {
+                game.Output.WriteLine("Inventory:");
+
+                foreach (Item item in game.Player.Inventory)
+                {
+                    game.Output.WriteLine(item.Name);
+                }
+                game.Output.Write(" ");
+            }
+            else
+            {
+                game.Output.WriteLine("You have no items.");
+                game.Output.Write(" ");
+
+            }
 
         }//END ScoreCheck
 

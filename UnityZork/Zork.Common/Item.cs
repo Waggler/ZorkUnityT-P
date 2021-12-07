@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Zork
 {
-    public class Room : IEquatable<Room>, INotifyPropertyChanged
+    public class Item : IEquatable<Item>, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -15,24 +15,18 @@ namespace Zork
         [JsonProperty(Order = 2)]
         public string Description { get; set; }
 
-        [JsonProperty(PropertyName = "Neighbors", Order = 3)]
-        private Dictionary<Directions, string> NeighborNames { get; set; } = new Dictionary<Directions, string>();
-
-        [JsonProperty(PropertyName = "Items", Order = 4)]
-        public List<Item> Items { get; set; }
-
-        [JsonIgnore]
-        public IReadOnlyDictionary<Directions, Room> Neighbors => _neighbors;
+        //[JsonProperty(PropertyName = "Neighbors", Order = 3)]
+        //private Dictionary<Directions, string> NeighborNames { get; set; } = new Dictionary<Directions, string>();
 
         //[JsonIgnore]
-        //public IReadOnlyDictionary<String, Item> Items => _items;
+        //public IReadOnlyDictionary<Directions, Room> Neighbors => _neighbors;
 
-        public Room(string name = null)
+        public Item(string name = null)
         {
             Name = name;
         }
 
-        public static bool operator ==(Room lhs, Room rhs)
+        public static bool operator ==(Item lhs, Item rhs)
         {
             if (ReferenceEquals(lhs, rhs))
             {
@@ -47,16 +41,17 @@ namespace Zork
             return string.Compare(lhs.Name, rhs.Name, ignoreCase: true) == 0;
         }
 
-        public static bool operator !=(Room lhs, Room rhs) => !(lhs == rhs);
+        public static bool operator !=(Item lhs, Item rhs) => !(lhs == rhs);
 
-        public override bool Equals(object obj) => obj is Room room && this == room;
+        public override bool Equals(object obj) => obj is Item item && this == item;
 
-        public bool Equals(Room other) => this == other;
+        public bool Equals(Item other) => this == other;
 
         public override string ToString() => Name;
 
         public override int GetHashCode() => Name.GetHashCode();
 
+        /*
         //---------------------//
         public void UpdateNeighbors(World world)
         //---------------------//
@@ -87,8 +82,7 @@ namespace Zork
         }//END AssignNeighbor
 
         private Dictionary<Directions, Room> _neighbors = new Dictionary<Directions, Room>();
-
-        //private Dictionary<string, Item> _items = new Dictionary<string, Item>();
+        */
 
     }//END Room
 }
