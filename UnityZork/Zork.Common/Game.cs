@@ -106,6 +106,7 @@ namespace Zork
                         else
                         {
                             Output.WriteLine("What are you taking?");
+                            Output.Write(" ");
                             return;
                         }
                     }
@@ -118,6 +119,7 @@ namespace Zork
                         else
                         {
                             Output.WriteLine("What are you dropping?");
+                            Output.Write(" ");
                             return;
                         }
                     }
