@@ -46,7 +46,7 @@ namespace Zork
 
             Commands = new Dictionary<string, Command>()
             {
-                { "QUIT", new Command("QUIT", new string[] { "QUIT", "Q", "BYE" }, Quit) },
+                { "QUIT", new Command("QUIT", new string[] { "QUIT", "Q", "" }, Quit) },
                 { "LOOK", new Command("LOOK", new string[] { "LOOK", "L" }, Look) },
                 { "NORTH", new Command("NORTH", new string[] { "NORTH", "N" }, game => Move(game, Directions.NORTH)) },
                 { "SOUTH", new Command("SOUTH", new string[] { "SOUTH", "S" }, game => Move(game, Directions.SOUTH)) },
@@ -103,6 +103,7 @@ namespace Zork
             else
             {
                 Output.WriteLine("Unknown command.");
+                Output.Write(" ");
             }
 
         }//END InputRecievedHandler
@@ -117,7 +118,8 @@ namespace Zork
             }
             else
             {
-                game.Output.WriteLine($"You moved {direction}");
+                game.Output.WriteLine(game.Player.Location);
+                //game.Output.WriteLine($"You moved {direction}");
             }
 
             if (game.previousLocation != game.Player.Location)
@@ -125,8 +127,8 @@ namespace Zork
                 game.previousLocation = game.Player.Location;
                 Look(game);
             }
-            string value = " ";
-            game.Output.WriteLine(value);
+           string value = " ";
+           game.Output.Write(value);
 
         }//END Move
 
@@ -149,6 +151,7 @@ namespace Zork
             if (game.Player.Moves > 0)
             {
                 game.Output.WriteLine($"Your score is:{game.Player.Score} and you have made {game.Player.Moves} move(s)");
+                game.Output.Write(" ");
             }
 
         }//END ScoreCheck

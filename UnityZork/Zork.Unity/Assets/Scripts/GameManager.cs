@@ -31,7 +31,9 @@ public class GameManager : MonoBehaviour
         _game.previousLocation = _game.Player.Location;
         _game.Output.WriteLine(_game.WelcomeMessage);
 
+        _game.Output.WriteLine(_game.Player.Location);
         Game.Look(_game);
+        _game.Output.WriteLine(" ");
 
         InputService.InputField.Select();
         InputService.InputField.ActivateInputField();
