@@ -19,6 +19,9 @@ namespace Zork
 
         public Room previousLocation { get; set; }
 
+        [JsonIgnore]
+        public string commandSubject { get; set; }
+
         public string WelcomeMessage { get; set; }
 
         public string ExitMessage { get; set; }
@@ -46,7 +49,7 @@ namespace Zork
 
             Commands = new Dictionary<string, Command>()
             {
-                { "QUIT", new Command("QUIT", new string[] { "QUIT", "Q", "" }, Quit) },
+                { "QUIT", new Command("QUIT", new string[] { "QUIT", "Q", "CYA", "BYE", "ADIOS" }, Quit) },
                 { "LOOK", new Command("LOOK", new string[] { "LOOK", "L" }, Look) },
                 { "NORTH", new Command("NORTH", new string[] { "NORTH", "N" }, game => Move(game, Directions.NORTH)) },
                 { "SOUTH", new Command("SOUTH", new string[] { "SOUTH", "S" }, game => Move(game, Directions.SOUTH)) },
@@ -54,6 +57,9 @@ namespace Zork
                 { "WEST", new Command("WEST", new string[] { "WEST", "W" }, game => Move(game, Directions.WEST)) },
                 { "REWARD", new Command("REWARD", new string[] { "REWARD", "R"}, Reward) },
                 { "SCORE", new Command("SCORE", new string[] { "SCORE"}, ScoreCheck) },
+                { "INVENTORY", new Command("INVENTORY", new string[] { "INVENTORY", "I"}, ShowInventory) },
+                { "GET", new Command("GET", new string[] { "GET", "G", "GRAB", "TAKE"}, game => Get(game, commandSubject)) },
+                { "DROP", new Command("DROP", new string[] { "DROP", "D", "LEAVE", }, game => Drop(game, commandSubject)) },
 
             };
 
@@ -84,10 +90,38 @@ namespace Zork
         {
 
             Command foundCommand = null;
+            string[] sortedString = commandString.Split(' ');
+
             foreach (Command command in Commands.Values)
             {
-                if (command.Verbs.Contains(commandString))
+
+                if (command.Verbs.Contains(sortedString[0]))
                 {
+                    if (command.Verbs.Contains("GET"))
+                    {
+                        if(sortedString.Length > 1)
+                        {
+                            commandSubject = sortedString[1];
+                        }
+                        else
+                        {
+                            Output.WriteLine("What are you taking?");
+                            return;
+                        }
+                    }
+                    else if (command.Verbs.Contains("DROP"))
+                    {
+                        if (sortedString.Length > 1)
+                        {
+                            commandSubject = sortedString[1];
+                        }
+                        else
+                        {
+                            Output.WriteLine("What are you dropping?");
+                            return;
+                        }
+                    }
+
                     foundCommand = command;
                     break;
                 }
@@ -98,7 +132,7 @@ namespace Zork
                 foundCommand.Action(this);
                 Player.Moves++;
 
-                
+
             }
             else
             {
@@ -127,8 +161,8 @@ namespace Zork
                 game.previousLocation = game.Player.Location;
                 Look(game);
             }
-           string value = " ";
-           game.Output.Write(value);
+            string value = " ";
+            game.Output.Write(value);
 
         }//END Move
 
@@ -145,14 +179,42 @@ namespace Zork
         //---------------------//
 
         //---------------------//
+        private static void Get(Game game, string subject)
+        //---------------------//
+        {
+            //game.Player.Inventory
+            game.Output.WriteLine(subject);
+            game.Output.Write(" ");
+
+        }
+
+        //---------------------//
+        private static void Drop(Game game, string subject)
+        //---------------------//
+        {
+            //game.Player.Inventory
+            game.Output.WriteLine(subject);
+            game.Output.Write(" ");
+
+        }
+
+        //---------------------//
         private static void ScoreCheck(Game game)
         //---------------------//
         {
             if (game.Player.Moves > 0)
             {
-                game.Output.WriteLine($"Your score is:{game.Player.Score} and you have made {game.Player.Moves} move(s)");
+                game.Output.WriteLine($"Your score is: {game.Player.Score} and you have made {game.Player.Moves} move(s)");
                 game.Output.Write(" ");
             }
+
+        }//END ScoreCheck
+
+        //---------------------//
+        private static void ShowInventory(Game game)
+        //---------------------//
+        {
+            
 
         }//END ScoreCheck
 
