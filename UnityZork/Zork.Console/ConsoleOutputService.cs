@@ -17,7 +17,7 @@ namespace Zork
         public void Write(object value)
         //---------------------//
         {
-            Console.WriteLine(value.ToString());
+            Console.Write(value.ToString());
 
         }//END Write
 

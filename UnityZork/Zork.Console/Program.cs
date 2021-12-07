@@ -33,12 +33,12 @@ namespace Zork
             while (game.IsRunning)
             {
                 Room previousRoom = null;
-                output.WriteLine(game.Player.Location);
+                /*output.WriteLine(game.Player.Location);
                 if (previousRoom != game.Player.Location)
                 {
                     Game.Look(game);
                     previousRoom = game.Player.Location;
-                }
+                }*/
 
                 output.Write("\n> ");
 
