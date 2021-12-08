@@ -24,9 +24,6 @@ namespace Zork
         [JsonIgnore]
         public IReadOnlyDictionary<Directions, Room> Neighbors => _neighbors;
 
-        //[JsonIgnore]
-        //public IReadOnlyDictionary<String, Item> Items => _items;
-
         public Room(string name = null)
         {
             Name = name;
@@ -87,8 +84,6 @@ namespace Zork
         }//END AssignNeighbor
 
         private Dictionary<Directions, Room> _neighbors = new Dictionary<Directions, Room>();
-
-        //private Dictionary<string, Item> _items = new Dictionary<string, Item>();
 
     }//END Room
 }

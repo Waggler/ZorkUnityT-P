@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -155,7 +153,6 @@ namespace Zork
             else
             {
                 game.Output.WriteLine(game.Player.Location);
-                //game.Output.WriteLine($"You moved {direction}");
             }
 
             if (game.previousLocation != game.Player.Location)
@@ -181,7 +178,6 @@ namespace Zork
                 }
 
             }
-            //game.Output.Write(" ");
         }
 
         //---------------------//
@@ -251,7 +247,7 @@ namespace Zork
         private static void ShowInventory(Game game)
         //---------------------//
         {
-            if (game.Player.Inventory != null)
+            if (game.Player.Inventory.Count > 0)
             {
                 game.Output.WriteLine("Inventory:");
 

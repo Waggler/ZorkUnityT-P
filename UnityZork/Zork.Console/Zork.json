@@ -12,7 +12,7 @@
         "Items": [
           {
             "Name": "LEAFLET",
-            "Description": "Small Leaflet"
+            "Description": "There is a leaflet on the ground."
           }
         ]
       },
@@ -59,7 +59,10 @@
           "East": "West of House"
         },
         "Items": [
-
+          {
+            "Name": "EGG",
+            "Description": "There is a jeweled egg on the ground."
+          }
         ]
       },
       {
